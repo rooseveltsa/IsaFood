@@ -138,10 +138,6 @@ export const Kits = () => {
           ))}
         </div>
 
-        {/* Bottom note - simple */}
-        <p className="text-center text-xs text-gray-400 mt-8 max-w-md mx-auto">
-          Entrega gratis em Plano Piloto, Aguas Claras, Taguatinga, Ceilandia, Guara, Sobradinho e Planaltina.
-        </p>
       </div>
     </section>
   );

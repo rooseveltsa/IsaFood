@@ -1,0 +1,36 @@
+name: whatsapp-automation
+version: 1.0.0
+description: Squad especialista em WhatsApp Business via Evolution API — conexao, automacao, chatbot, disparos em massa e remarketing
+author: Junior Miranda
+tags: [whatsapp, evolution-api, automation, chatbot, remarketing, crm]
+
+agents:
+  - id: whatsapp-expert
+    file: agents/whatsapp-expert.md
+    role: lead
+
+tasks:
+  - connect-instance
+  - setup-chatbot
+  - create-campaign
+  - setup-remarketing
+  - send-message
+  - manage-contacts
+  - diagnose-connection
+
+workflows:
+  - full-setup
+  - campaign-flow
+
+data:
+  - evolution-api-reference.md
+  - message-templates.md
+
+config:
+  evolution_api:
+    default_port: 8085
+    default_api_key: isafood-evo-2026
+  business:
+    phone: "5561996925018"
+    name: "Isa Fitness"
+    pix: "37152661120"
