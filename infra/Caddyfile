@@ -1,0 +1,9 @@
+# Evolution API — WhatsApp gateway
+api.isafood.com {
+	reverse_proxy evolution-api:8080
+}
+
+# Webhook server — receives Evolution API callbacks
+webhook.isafood.com {
+	reverse_proxy host.docker.internal:3001
+}

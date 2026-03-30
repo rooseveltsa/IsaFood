@@ -1,0 +1,70 @@
+version: "3.8"
+
+services:
+  # ---------------------------------------------------------------------------
+  # Evolution API — WhatsApp gateway
+  # ---------------------------------------------------------------------------
+  evolution-api:
+    image: atendai/evolution-api:latest
+    container_name: isafood-evolution-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    env_file: .env
+    environment:
+      - SERVER_URL=${EVOLUTION_API_URL}
+      - AUTHENTICATION_API_KEY=${EVOLUTION_API_KEY}
+      - DATABASE_PROVIDER=postgresql
+      - DATABASE_CONNECTION_URI=${SUPABASE_DB_URL}
+      - CACHE_REDIS_ENABLED=true
+      - CACHE_REDIS_URI=${REDIS_URL}
+      - WEBHOOK_GLOBAL_URL=${WEBHOOK_URL}
+      - WEBHOOK_GLOBAL_ENABLED=true
+      - WEBHOOK_EVENTS=MESSAGES_UPSERT,CONNECTION_UPDATE,MESSAGES_UPDATE
+      - CONFIG_SESSION_PHONE_CLIENT=Chrome
+      - QRCODE_LIMIT=30
+    depends_on:
+      - redis
+    networks:
+      - isafood-network
+
+  # ---------------------------------------------------------------------------
+  # Redis — session cache for Evolution API
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: isafood-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - isafood-network
+
+  # ---------------------------------------------------------------------------
+  # Caddy — reverse proxy with automatic HTTPS
+  # ---------------------------------------------------------------------------
+  caddy:
+    image: caddy:2-alpine
+    container_name: isafood-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      - isafood-network
+
+volumes:
+  redis-data:
+  caddy-data:
+  caddy-config:
+
+networks:
+  isafood-network:
+    driver: bridge
